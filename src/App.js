@@ -132,9 +132,7 @@ const Grid = styled.div`
 `;
 
 // Api Unsplah
-const APIKEY =
-  process.env.API_KEY ||
-  "b92cb0fd889bf002ebe6b7c146e17e293baf70925e72727f855136a0095d6faf";
+const APIKEY = process.env.REACT_APP_API_KEY;
 const URL = "https://api.unsplash.com/photos";
 
 // Mansory Options
@@ -201,7 +199,7 @@ const App = () => {
         <CategoriesList />
         <Masonry
           breakpointCols={mansoryOption}
-          className={""}
+          className={"my-gallery-class"}
           columnClassName={""}
         >
           {pics.map((pic, index) => (
