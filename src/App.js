@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import Axios from "axios";
+import Masonry from "react-masonry-css";
 
 import { GlobalStyle } from "./component/Global";
 
@@ -136,6 +137,26 @@ const APIKEY =
   "b92cb0fd889bf002ebe6b7c146e17e293baf70925e72727f855136a0095d6faf";
 const URL = "https://api.unsplash.com/photos";
 
+// Mansory Options
+const mansoryOption = {
+  default: 4,
+  1100: 3,
+  700: 2,
+  500: 1
+};
+
+const MansoryGrid = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-left: -30px;
+  width: auto;
+`;
+
+const MasonryGridColumn = styled.div`
+  padding-left: 30px;
+  background-clip: padding-box;
+`;
+
 const App = () => {
   // State Api
   const [pics, setPic] = useState([]);
@@ -178,13 +199,15 @@ const App = () => {
           {theme.type === "light" && <SunIcon onClick={setDarkTheme} />}
         </Nav>
         <CategoriesList />
-        <GridWrapper>
-          <Grid>
-            {pics.map((pic, index) => (
-              <Pics src={pic.urls.small} alt={index} key={index} />
-            ))}
-          </Grid>
-        </GridWrapper>
+        <Masonry
+          breakpointCols={mansoryOption}
+          className={""}
+          columnClassName={""}
+        >
+          {pics.map((pic, index) => (
+            <Pics src={pic.urls.small} alt={index} key={index} />
+          ))}
+        </Masonry>
       </>
     </ThemeProvider>
   );
