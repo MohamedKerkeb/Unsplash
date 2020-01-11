@@ -16,6 +16,8 @@ import { themes } from "./utils/themes";
 import { CategoriesList } from "./component/CategoriesList";
 import { Pics } from "./component/Pics";
 
+import './app.css'
+
 require("dotenv").config();
 
 const lightTheme = () => ({
@@ -148,6 +150,7 @@ const MansoryGrid = styled.div`
   justify-content: center;
   margin-left: -30px;
   width: auto;
+  border: 1px dashed red;
 `;
 
 const MasonryGridColumn = styled.div`
@@ -171,14 +174,15 @@ const App = () => {
   useEffect(() => {
     const getPics = async () => {
       const pic = await Axios.get(
-        `${URL}?page=1&per_page=30&order_by=popular&client_id=${APIKEY}`
+        `${URL}?page=1&per_page=50&order_by=latest&client_id=${APIKEY}`
       );
+      console.log(pic)
       setPic(pic.data);
       setLoad(true);
     };
     getPics();
   }, []);
-  console.log(pics);
+  // console.log(pics);
   return (
     <ThemeProvider theme={theme}>
       <>
@@ -199,8 +203,8 @@ const App = () => {
         <CategoriesList />
         <Masonry
           breakpointCols={mansoryOption}
-          className={"my-gallery-class"}
-          columnClassName={""}
+          className="my-masonry-grid"
+          columnClassName="my-masonry-grid_column"
         >
           {pics.map((pic, index) => (
             <Pics src={pic.urls.small} alt={index} key={index} />
