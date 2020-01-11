@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from "react";
 
-import Axios from 'axios'
-
+import Axios from "axios";
 
 import { GlobalStyle } from "./component/Global";
 
@@ -13,10 +11,11 @@ import { ReactComponent as UnsplashLogoSVG } from "./asset/logos/unslashLogo.svg
 
 import styled, { css, ThemeProvider } from "styled-components";
 import { themes } from "./utils/themes";
+
 import { CategoriesList } from "./component/CategoriesList";
+import { Pics } from "./component/Pics";
 
-require('dotenv').config()
-
+require("dotenv").config();
 
 const lightTheme = () => ({
   ...themes["common"],
@@ -27,7 +26,6 @@ const darkTheme = () => ({
   ...themes["common"],
   ...themes["dark"]
 });
-
 
 const ThemeIcon = css`
   width: 2rem;
@@ -79,13 +77,13 @@ const Tiltle = styled.h1`
   display: inline-block;
   font-size: 2rem;
   font-weight: 700;
-  color: ${props => props.theme.color}
-`
+  color: ${props => props.theme.color};
+`;
 
 const Subtitle = styled.span`
   font-size: 1.3rem;
-  font-weight: 500
-`
+  font-weight: 500;
+`;
 
 const SearchWrapper = styled.div`
   display: flex;
@@ -98,7 +96,7 @@ const SearchWrapper = styled.div`
   :hover {
     border: 0.12rem solid #cbd2d9;
   }
-`
+`;
 
 const SearchIcon = styled(SearchSVG)`
   fill: #9aa5b1;
@@ -106,7 +104,7 @@ const SearchIcon = styled(SearchSVG)`
   height: 1.6rem;
   margin-left: 1.2rem;
   margin-right: 1rem;
-`
+`;
 const SearchBar = styled.input`
   outline:: none;
   border: none;
@@ -116,35 +114,52 @@ const SearchBar = styled.input`
   background: transparent;
   font-size: 1.4rem;
   font-weight: 300
-`
+`;
 
+// Grid
+const GridWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
+const Grid = styled.div`
+  padding-top: 8.2rem;
+  padding-left: 23rem;
+  display: grid;
+  grid-template-columns: repeat(3, 38rem);
+  margin-bottom: 1.5rem;
+`;
 
 // Api Unsplah
-const APIKEY = process.env.API_KEY;
-const URL = "https://api.unsplash.com/photos"
+const APIKEY =
+  process.env.API_KEY ||
+  "b92cb0fd889bf002ebe6b7c146e17e293baf70925e72727f855136a0095d6faf";
+const URL = "https://api.unsplash.com/photos";
 
 const App = () => {
-
-  // State Api 
-  const [pic, setPic] = useState([]);
-  const [load, setLoad] = useState(false)
+  // State Api
+  const [pics, setPic] = useState([]);
+  const [load, setLoad] = useState(false);
 
   // Theme
   const [theme, setTheme] = useState(lightTheme());
   const setDarkTheme = () => setTheme(darkTheme());
   const setLightTheme = () => setTheme(lightTheme());
 
-  console.log(process.env)
+  console.log(process.env);
 
   // Call Api
   useEffect(() => {
     const getPics = async () => {
-      const pic = await Axios.get(`${URL}?page=1&per_page=30&order_by=popular&client_id=${APIKEY}`)
-      console.log(pic)
+      const pic = await Axios.get(
+        `${URL}?page=1&per_page=30&order_by=popular&client_id=${APIKEY}`
+      );
+      setPic(pic.data);
+      setLoad(true);
     };
     getPics();
-  }, [])
+  }, []);
+  console.log(pics);
   return (
     <ThemeProvider theme={theme}>
       <>
@@ -157,12 +172,19 @@ const App = () => {
           </TitleWrapper>
           <SearchWrapper>
             <SearchIcon />
-            <SearchBar placeholder='Search free high-resolution photos'/>
+            <SearchBar placeholder="Search free high-resolution photos" />
           </SearchWrapper>
           {theme.type === "dark" && <MoonIcon onClick={setLightTheme} />}
           {theme.type === "light" && <SunIcon onClick={setDarkTheme} />}
         </Nav>
         <CategoriesList />
+        <GridWrapper>
+          <Grid>
+            {pics.map((pic, index) => (
+              <Pics src={pic.urls.small} alt={index} key={index} />
+            ))}
+          </Grid>
+        </GridWrapper>
       </>
     </ThemeProvider>
   );
